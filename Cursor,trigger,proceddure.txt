@@ -1,0 +1,178 @@
+******Cursor*******
+
+DECLARE
+
+CURSOR simple_cur IS SELECT * FROM EMPLOYEE;
+
+emp_rec EMPLOYEE%ROWTYPE;
+
+BEGIN
+
+     OPEN simple_cur;
+
+
+FETCH simple_cur INTO emp_rec;
+DBMS_OUTPUT.PUT_LINE(emp_rec.ssn || ' ' || emp_rec.SALARY );
+
+CLOSE simple_cur;
+
+
+*******************************
+
+
+DECLARE
+CURSOR simple_cur IS SELECT * FROM EMPLOYEE;
+
+emp_rec EMPLOYEE%ROWTYPE;
+
+BEGIN
+     OPEN simple_cur;
+    LOOP
+     	FETCH simple_cur INTO emp_rec;
+     	DBMS_OUTPUT.PUT_LINE(emp_rec.ssn || ' ' || emp_rec.SALARY );
+     	EXIT WHEN simple_cur%NOTFOUND;
+    END LOOP;
+     DBMS_OUTPUT.PUT_LINE(' NO OF ROWS' || simple_cur%ROWCOUNT );
+
+     CLOSE simple_cur;
+END;
+
+
+*************************************
+************Trigger******************
+
+CREATE OR REPLACE TRIGGER simpletrig
+AFTER DELETE OR INSERT OR UPDATE ON EMPLOYEE              //statement
+
+FOR EACH ROW 
+BEGIN
+	IF DELETING THEN                                                                            //boolean
+  		INSERT INTO EMP_LOG VALUES(USER, SYSDATE, 'DELETE’);   //action
+	ELSIF INSERTING THEN                                                                   //boolean
+  		INSERT INTO EMP_LOG VALUES(USER, SYSDATE, 'INSERT’);   //action
+	ELSIF UPDATING THEN 					       //boolean
+  		INSERT INTO EMP_LOG VALUES(USER, SYSDATE, 'UPDATE’);  //action
+	END IF;
+END;
+
+
+**********************************
+**********Procedure***************
+
+CREATE OR REPLACE PROCEDURE raise_sal(e_ssn employee.ssn%type)
+IS 
+BEGIN
+	UPDATE EMPLOYEE
+	SET SALARY = SALARY + 1000
+	WHERE SSN = e_ssn;
+END raise_sal;
+
+*****************
+*****Procedure with IN and OUT parameters*******
+
+
+CREATE OR REPLACE PROCEDURE UPDATE_PEOPLE(P_ADDRESS IN EMPLOYEE.ADDRESS%TYPE,
+                                                                                          P_SSN IN EMPLOYEE.SSN%TYPE, 
+                                                                                          P_FNAME OUT EMPLOYEE.FNAME%TYPE)
+IS
+BEGIN 
+	DBMS_OUTPUT.ENABLE();
+	DBMS_OUTPUT.PUT_LINE('JOB STARTED’);
+	DBMS_OUTPUT.PUT_LINE('VALID DATA PROVIDED');
+
+	UPDATE EMPLOYEE 
+	SET EMPLOYEE.ADDRESS = P_ADDRESS 
+	WHERE EMPLOYEE.SSN = P_SSN;
+	
+	SELECT EMPLOYEE.FNAME INTO P_FNAME 
+	FROM EMPLOYEE 
+	WHERE EMPLOYEE.SSN = P_SSN;
+	DBMS_OUTPUT.PUT_LINE('UPDATE SUCCESSFUL');
+	DBMS_OUTPUT.PUT_LINE('UPDATED EMPLOYEE IS:' ||' ' || P_FNAME);
+END UPDATE_PEOPLE;
+
+***************
+***** creating procedure
+
+CREATE OR REPLACE PROCEDURE add_dept() IS
+ 	v_dnumber  number(10);
+	v_dname varchar(20);
+	v_dmgrssn varchar(10);
+	v_dmgrstdate date;
+
+BEGIN
+  	v_dnumber:=280;
+  	v_dname:='HR';
+  	v_dmgrssn:='103’;
+ 	 v_dmgrstdate:='12-04-2000’;
+	INSERT INTO DEPARTMENT VALUES(v_dnumber, v_dname, v_dmgrssn, v_dmgrstdate);
+	DBMS_OUTPUT.PUT_LINE( 'DATA INSERTED SUCCESSFULLY');
+END add_dept;
+
+********Calling procedure
+
+BEGIN
+	add_dept();
+END;
+********
+
+
+*********************
+****Function**********
+
+CREATE OR REPLACE FUNCTION totalemployees()
+RETURN number IS total number(2):=0;
+
+BEGIN
+	SELECT count(*) INTO total
+	FROM EMPLOYEE;
+	RETURN total;
+END;
+
+***************
+
+CREATE OR REPLACE FUNCTION finddepartment(name_in IN varchar2)
+RETURN number IS dep_no number;
+
+CURSOR C1 IS 
+	SELECT DNUMBER
+	FROM DEPARTMENT 
+	WHERE DNAME = name_in;
+BEGIN
+	OPEN C1;
+	FETCH C1 INTO dep_no;
+	IF C1%NOTFOUND THEN 
+  		dep_no := 9999;
+	END IF;
+	CLOSE C1;
+	RETURN dep_no;
+END;
+
+**********
+******Create the function******
+
+CREATE OR REPLACE FUNCTION totalsalary()
+RETURN INTEGER IS total integer:=0;
+
+BEGIN
+
+	SELECT SUM(SALARY) INTO total 
+	FROM EMPLOYEE;
+	RETURN total;
+END;
+
+
+***********
+****Calling the function ***********
+
+DECLARE answer INTEGER;
+BEGIN
+	answer:=totalsalary();
+	DBMS_OUTPUT.PUT_LINE(' TOTAL SALARY OF EMPLOYEES IS ' || 	'=' || answer);
+END;
+
+
+********
+
+
+ 
