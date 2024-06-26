@@ -1,0 +1,320 @@
+************
+Declare
+Var1 integer;
+Var2 integer;
+Var3 integer;
+Begin
+var1:=&Var1;
+var2:=&Var2;
+var3:=var1+var2;
+Dbms_output.put_line(var3);
+End;
+/
+
+************
+
+Declare
+Var1 integer;
+Var2 integer;
+Var3 integer;
+Begin
+var1:=&Var1;
+var2:=&Var2;
+var3:=var1-var2;
+Dbms_output.put_line(var3);
+End;
+/
+
+***********
+
+Declare
+Var1 integer;
+Var2 integer;
+Var3 integer;
+Begin
+var1:=&Var1;
+var2:=&Var2;
+var3:=var1*var2;
+Dbms_output.put_line(var3);
+End;
+/
+
+********
+
+Declare
+Var1 integer;
+Var2 integer;
+Var3 integer;
+Begin
+var1:=&Var1;
+var2:=&Var2;
+var3:=var1/var2;
+Dbms_output.put_line(var3);
+End;
+/
+
+
+************
+
+Declare
+var1 integer;
+var2 integer;
+var3 integer;
+begin
+var3:=&var1+&var2;
+dbms_output.put_line(var3);
+end;
+/
+
+
+*****
+
+Program2:-
+
+Declare
+area NUMBER(6,2);
+Perimeter NUMBER(6,2);
+radius NUMBER(1):=3;
+pi CONSTANT NUMBER(3,2):=3.14;
+
+BEGIN
+area:=pi*radius*radius;
+perimeter:=2*pi*radius;
+dbms_output.put_line('Area='||area);
+dbms_output.put_line('Perimeter='||perimeter);
+End;
+/
+
+*******
+
+Program3:-
+
+declare
+a NUMBER:=12;
+b NUMBER:=13;
+c NUMBER:=24;
+begin
+if a>b And a>c then
+dbms_output.put_line('Greater number is ' || a);
+
+elsif b>a And b>c then
+dbms_output.put_line('Greater number is '||b);
+
+else
+dbms_output.put_line('Greater number is '||c);
+end if;
+end;
+/
+
+*****
+
+declare
+a NUMBER:=46;
+b NUMBER:=67;
+c NUMBER:=21;
+begin
+if a>b And a>c then
+dbms_output.put_line('Greater number is ' || a);
+
+elsif b>a And b>c then
+dbms_output.put_line('Greater number is '||b);
+
+else
+dbms_output.put_line('Greater number is '||c);
+end if;
+end;
+/
+
+
+*****
+
+(Q9)(iv). Write a PL/SQL code for Fibonacci series.
+
+Declare
+first number:=0;
+second number:=1;
+temp number;
+n number:=5;
+i number;
+
+Begin
+dbms_output.put_line('Series');
+dbms_output.put_line(first);
+dbms_output.put_line(second);
+for i in 2..n
+loop
+temp:=first+second;
+first:=second;
+second:=temp;
+dbms_output.put_line(temp);
+end loop;
+End;
+/
+
+
+*******
+
+Declare
+first number:=0;
+second number:=1;
+temp number;
+n number;
+i number;
+
+Begin
+n:=&n;
+dbms_output.put_line('Series');
+dbms_output.put_line(first);
+dbms_output.put_line(second);
+for i in 2..n
+loop
+temp:=first+second;
+first:=second;
+second:=temp;
+dbms_output.put_line(temp);
+end loop;
+End;
+/
+
+***************
+
+Declare
+first number:=0;
+second number:=1;
+temp number;
+n number;
+i number;
+
+Begin
+n:=&n;
+dbms_output.put_line('Series');
+for i in 0..n
+loop
+temp:=first+second;
+debm_output.put_line(temp);
+first:=second;
+second:=temp;
+dbms_output.put_line(temp);
+end loop;
+End;
+/
+
+
+***********************
+Cursors
+-------
+Implicit Cursor
+Explicit Cursor
+
+Implicit Cursor
+(1). ISOPEN
+(2). 
+(3).
+(4).
+
+Explicit Cursor
+
+
+
+
+
+Program:-
+DECLARE
+CURSOR simple_cur IS SELECT * FROM EMPLOYEE;
+emp_rec EMPLOYEE%ROWTYPE;
+
+BEGIN
+OPEN simple_cur;
+
+FETCH simple_cur INTO emp_rec;
+dbms_output.put_line(emp_rec.E_id||' '||emp_rec.SALARY);
+
+CLOSE simple_cur;
+
+End;
+/
+
+
+
+***************
+Example2:
+
+create Procedure:
+
+create procedure proc2
+as
+V1 varchar(20):='Deepanshu';
+V2 varchar(20):='Jain';
+Begin
+dbms_output.put_line('First name: '||V1 ||V2);
+End;
+/
+
+
+
+************************
+Example3:
+Table create:
+create table user32(id number(10) primary key, name varchar(100));
+
+create Procedure:
+
+create or replace procedure "INSERTUSER"
+(id In NUMBER,
+name In VARCHAR)
+is
+begin
+insert into user32 values(id , name);
+End;
+/
+
+
+***********************************
+
+
+Crate [or replace] FUNCTION function_name
+(parameter1,parameter2,parameter3,.......)
+RETURN return_datatype
+IS
+BEGIN
+<function_body>
+END;
+/
+
+
+
+***********************************
+
+
+Example 1:-
+
+create or replace function adder (n1 in number, n2 in number)
+return number
+is
+n3 number(8);
+begin
+n3:=n1+n2;
+return n3;
+end;
+/
+
+call the function:
+DECLARE
+n3 number(2);
+BEGIN
+n3:=adder(11,22);
+dbms_output.put_line('Addition is:'||n3);
+END;
+/
+
+
+
+
+***************************************
+
+create table Customers(id int primary key, Name varchar(20) Not null, Department varchar(20) not null, salary int not null);
+
+create or replace function totalcust
+Return number
+IS
+
